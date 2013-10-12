@@ -54,11 +54,11 @@ EXAMPLES = '''
 # Fast port scan
     -nmap: target=192.168.1.1/24 arguments=-T5
 '''
-nmap_found = True
+NMAP_FOUND = True
 try:
     import nmap
 except ImportError:
-    nmap_found = False
+    NMAP_FOUND = False
 
 def main():
     # Default arguments: -sV.
@@ -70,13 +70,14 @@ def main():
             arguments = dict(required = False, default = "-sV")
             )
         )
-    if not nmap_found:
-        module.fail_json("msg=NMAP module not found.NMPA module is requiered. You can install it by running 'pip install python-nmap'")
+    if not NMAP_FOUND:
+        module.fail_json("msg=NMAP module not found.NMPA module is requiered."
+                " You can install it by running 'pip install python-nmap'")
     target = module.params['target']
     ports = module.params['ports']
     arguments = module.params['arguments']
-    nm = nmap.PortScanner()
-    scan_data = nm.scan(hosts=target, ports=ports, arguments=arguments)
+    scanner = nmap.PortScanner()
+    scan_data = scanner.scan(hosts=target, ports=ports, arguments=arguments)
     module.exit_json(scan_result = scan_data)
 
 ######################################################################
